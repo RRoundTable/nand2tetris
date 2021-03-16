@@ -39,5 +39,62 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-    // Put your code here:
+
+    // Instruction
+    Not(in=instruction[15], out=AInstruction);
+    Not(in=AInstruction, out=CInstruction);
+
+    // ddd: A register, D register, Memory
+    // instruction[5]: A register
+    // instruction[4]: D register
+    // instruction[3]: Memory 
+    And(a=CInstruction, b=instruction[5], out=ALUtoA);
+    Mux16(a=instruction, b=ALUout, sel=ALUtoA, out=Aregion);
+
+    // Aregister
+    Or(a=AInstruction, b=ALUtoA, out=loadA);
+    ARegister(in=Aregion, load=loadA, out=Aout, out[0..14]=addressM);
+
+    // instruction[12]: A or M
+    Mux16(a=Aout, b=inM, sel=instruction[12], out=AMout);
+    // Dregister
+    And(a=CInstruction, b=instruction[4], out=loadD);
+    DRegister(in=ALUout, load=loadD, out=Dout);
+
+    // ALUout:
+    ALU(
+        x=Dout, y=AMout, 
+        zx=instruction[11], 
+        nx=instruction[10], 
+        zy=instruction[9], 
+        ny=instruction[8], 
+        f=instruction[7], 
+        no=instruction[6], 
+        out=ALUout, 
+        out=outM,
+        zr=ZRout, ng=NGout
+    );
+
+    // set outputs for memory
+    And(a=instruction[3], b=CInstruction, out=writeM);
+
+
+    // PC
+    // jjj
+    // j1 < 0
+    // j2 == 0
+    // j3 > 0
+    And(a=NGout, b=instruction[2], out=j1);
+    And(a=ZRout, b=instruction[1], out=j2);
+    Or(a=NGout, b=ZRout, out=zeroorneg);
+    Not(in=zeroorneg, out=positive);
+    And(a=positive, b=instruction[0], out=j3);
+
+    // if j1 or j2 or j3 -> jump to A
+    Or(a=j1, b=j2, out=j4);
+    Or(a=j4, b=j3, out=JumptoA);
+    And(a=CInstruction, b=JumptoA, out=PCload);
+    Not(in=PCload, out=PCinc);
+    PC(in=Aout, load=PCload, inc=PCinc, reset=reset, out[0..14]=pc);
+
 }

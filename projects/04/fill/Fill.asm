@@ -19,17 +19,26 @@ M = 0
 (CHECK)
     @i
     D = M
-    @RESET
+    @RESET0
     D; JLT
+
+    @i
+    D = M
+    @8182
+    D = D - A
+    @RESET1
+    D; JEQ
+    
     @KBD
     D = M
-    @LOOP2
+
+    @White
     D; JEQ
 
-    @LOOP1
+    @Black
     D; JNE
 
-(LOOP1) 
+(Black) 
     @i
     D = M
 
@@ -38,15 +47,13 @@ M = 0
     M = -1
     @i
     M = M + 1
-
-
     @CHECK
     0; JMP
 
     @KBD
     M = 0
 
-(LOOP2)
+(White)
     @i
     D = M
     @SCREEN
@@ -59,8 +66,18 @@ M = 0
     @KBD
     M = 0
 
-(RESET)
+(RESET0)
     @i
     M = 0
     @CHECK
     0; JMP
+
+(RESET1)
+    @8181
+    D=A
+    @i
+    M = D
+    @CHECK
+    0; JMP
+
+

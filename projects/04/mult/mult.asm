@@ -19,7 +19,7 @@
     @R1
     D=D-M
     @END
-    D;JGT
+    D;JGT 
     @R0
     D=M
     @R2
