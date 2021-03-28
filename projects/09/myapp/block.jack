@@ -1,0 +1,21 @@
+/* Class For Tetris Blocks*/
+
+class Block {
+
+    field int x, y;
+
+    constructor Block new(int Ax, Ay) {
+        let x = Ax;
+	let y = Ay;
+	let type  = 0;
+	let color = false;
+	let rotation = 0;
+	let figuare = Array(19)
+    }
+
+    method void draw() {
+        do Screen.setColor();
+        do Screen.DrawRectagle(x, y, x + size, y + size);
+    }
+
+}

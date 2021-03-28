@@ -29,68 +29,75 @@ class CodeWriter:
         }
 
     def write_init(self):
+        self._write_a_command('256')
+        self._write_c_command('D', 'A')
+        self._comp_to_reg(R_SP, 'D')     
+        self.writeCall('Sys.init', 0)     
         # SP
-        self._write_a_command("256")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_SP, comp="D",
-        )
+        # self._write_a_command("256")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_SP, comp="D",
+        # )
 
-        # Local
-        self._write_a_command("300")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_LCL, comp="D",
-        )
+        # # Local
+        # self._write_a_command("300")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_LCL, comp="D",
+        # )
 
-        # ARG
-        self._write_a_command("400")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_ARG, comp="D",
-        )
+        # # ARG
+        # self._write_a_command("400")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_ARG, comp="D",
+        # )
 
-        # This 
-        self._write_a_command("3000")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_THIS, comp="D",
-        )
+        # # This 
+        # self._write_a_command("3000")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_THIS, comp="D",
+        # )
 
-        # That
-        self._write_a_command("3010")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_THAT, comp="D",
-        )
+        # # That
+        # self._write_a_command("3010")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_THAT, comp="D",
+        # )
 
-        # Temp
-        self._write_a_command("5")
-        self._write_c_command(
-            dest="D",
-            comp="A",
-        )
-        self._comp_to_reg(
-            regnum=R_TEMP, comp="D",
-        )
+        # # Temp
+        # self._write_a_command("5")
+        # self._write_c_command(
+        #     dest="D",
+        #     comp="A",
+        # )
+        # self._comp_to_reg(
+        #     regnum=R_TEMP, comp="D",
+        # )
 
 
-        # self.write_call("Sys.init", 0)
+        # self.writeCall("Sys.init", 0)
+
+    def set_file_path(self, filepath: str):
+        self._vm_file = filepath.split("/")[-1].split(".")[0]
 
     def writeGoto(self, label: str) -> None:
         self._write_a_command(address=label)
@@ -98,7 +105,7 @@ class CodeWriter:
 
     def writeIf(self, label: str) -> None:
         self._pop_to_dest("D")
-        self._write_a_command(address="label")
+        self._write_a_command(address=label)
         self._write_c_command(dest=None, comp="D", jump="JNE")
 
     def _pop_to_dest(self, dest: str) -> None:
@@ -108,9 +115,9 @@ class CodeWriter:
     def writeLabel(self, label: str) -> None:
         self._write_l_command(label=label)
 
-    def writeFunction(self, function_name: str, num_locals: int) -> None:
+    def writeFunction(self, function_name: str, num_locals: str) -> None:
         self._write_l_command(function_name)
-        for i in range(num_locals):
+        for i in range(int(num_locals)):
             self._write_push(segment=S_CONST, index=0)
 
     def writeReturn(self) -> None:
@@ -138,14 +145,14 @@ class CodeWriter:
         self._comp_to_reg(regnum=regnum, comp="D")
         
 
-    def writeCall(self, function_name: str, num_args: int) -> None:
+    def writeCall(self, function_name: str, num_args: str) -> None:
         return_address = self._create_new_label()
         self._write_push(S_CONST, return_address) # push return_address
         self._write_push(S_REG, R_LCL)            # push LCL
         self._write_push(S_REG, R_ARG)            # push ARG
         self._write_push(S_REG, R_THIS)           # push THIS
         self._write_push(S_REG, R_THAT)           # push THAT
-        self._load_sp_offset(-num_args-5)
+        self._load_sp_offset(-int(num_args) - 5)
         self._comp_to_reg(R_ARG, 'D')       # ARG=SP-n-5
         self._reg_to_reg(R_LCL, R_SP)       # LCL=SP
         self._write_a_command(function_name)      # A=function_name
@@ -457,5 +464,5 @@ class CodeWriter:
         self._write_c_command(dest="M", comp="D")
 
     def _static_name(self, index: int) -> str:
-        return "static" + str(index)
+        return self._vm_file + str(index)
 

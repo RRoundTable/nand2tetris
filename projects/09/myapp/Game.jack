@@ -1,0 +1,134 @@
+class Game {
+    field Board board;
+    field Player player;
+    
+    constructor Game new() {
+        let board = Board.new();
+        let player = Player.new();
+        do setNewShape();
+        return this;
+    }
+
+    method void draw() {
+        var String shapeMap;
+        var Array position;
+        let shapeMap = getShapeMap();
+        let position = getPosition();
+        if(board.spaceIsFree(shapeMap, position[0], position[1])) {
+            do Drawer.drawShape(shapeMap, position);
+        } else {
+            do board.clearScreen();
+            do Output.printString("You Lose!");
+        }
+        return;
+    }
+
+    method void erase() {
+        do Drawer.eraseShape(getShapeMap(), getPosition());
+        return;
+    }
+
+    method void run() {
+        var char key;
+        var boolean exit;
+        let exit = false;
+        while (~exit) {
+            while(key = 0) {
+                let key = Keyboard.keyPressed();
+            }
+            if (key = 81) { let exit = true; } // q key
+            if (key = 90)  { do rotate(); } // z key
+            // if (key = 131) { do move(0, -1); } // up arrow
+            if (key = 133) { do move(0, 1); }  // down arrow
+            if (key = 130) { do move(-1, 0); } // left arrow
+            if (key = 132) { do move(1, 0); }  // right arrow
+            let key = 0;
+        }
+        return;
+    }
+
+    method void move(int x, int y) {
+        var int newX, newY;
+        var String shapeMap;
+        var Array position;
+        let shapeMap = getShapeMap();
+        let position = getPosition();
+        let newX = position[0] + x;
+        let newY = position[1] + y;
+        if(board.spaceIsFree(shapeMap, newX, newY)) { // prevents overlapping
+            if(board.isInContactAbove(shapeMap, newX, newY)) {
+                do erase();
+                do board.addShapeToBoard(shapeMap, newX, newY);
+                do setNewShape();
+            } else {
+                do erase();
+                do setPosition(newX, newY);
+                do draw();
+            }
+        } else {
+            if(board.shapeIsAtFloor(shapeMap, newX, newY)) {
+                do erase();
+                do board.addShapeToBoard(shapeMap, newX, newY);
+                do setNewShape();
+            }
+        }
+        do Sys.wait(50);
+        return;
+    }
+
+    method void rotate() {
+        var String shapeMap;
+        var Array position;
+        var int newOrientation, orientation;
+        let position = getPosition();
+        let orientation = getOrientation();
+        if(orientation = 3) {
+            let newOrientation = 0;
+        } else {
+            let newOrientation = orientation + 1;
+        }
+        let shapeMap = player.getShapeMap(newOrientation);
+        if(board.spaceIsFree(shapeMap, position[0], position[1])) {
+            do erase();
+            do setOrientation(newOrientation);
+            do draw();
+            do Sys.wait(200);
+        }
+        return;
+    }
+
+    method String getShapeMap() {
+        return player.getShapeMap(player.getOrientation());
+    }
+
+    method void setPosition(int newX, int newY) {
+        do player.setPosition(newX, newY);
+        return;
+    }
+
+    method Array getPosition() {
+        return player.getPosition();
+    }
+
+    method int getOrientation() {
+        return player.getOrientation();
+    }
+
+    method void setOrientation(int orientation) {
+        do player.setOrientation(orientation);
+        return;
+    }
+
+    method void setNewShape() {
+        do player.setNewShape();
+        do draw();
+        return;
+    }
+
+    method void dispose() {
+        do board.dispose();
+        do player.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+}

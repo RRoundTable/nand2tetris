@@ -1,0 +1,212 @@
+class Board {
+    field char isOne;
+    field Array allSquares;
+
+    constructor Board new() {
+        let isOne = 49;
+        do initializeBoard();
+        return this;
+    }
+
+    method void initializeBoard() {
+        var int counter;
+        var Array newRow;
+        let counter = 0;
+        let allSquares = Array.new(16);
+        while(counter < 16) {
+            let allSquares[counter] = "00000000000000000000000000000000";
+            let counter = counter + 1;
+        }
+        let allSquares[15] = "11111111111111111111111111111111";
+        return;
+    }
+
+    method void addShapeToBoard(String shapeMap, int newX, int newY) {
+        var int row, column;
+        var char bitChar;
+        while(row < 4) {
+            while(column < 4) {
+                let bitChar = shapeMap.charAt(((row * 4) + column));
+                if(bitChar = isOne) {
+                    do updateBoardSquare((newX + column), (newY + row));
+                }
+                let column = column + 1;
+            }
+            let column = 0;
+            let row = row + 1;
+        }
+        do removeCompleteRows();
+        do drawBoard();
+        return;
+    }
+
+    method void drawBoard() {
+        var int row;
+        let row = 0;
+        while(row < 16) {
+            do drawBoardRow(row);
+            let row = row + 1;
+        }
+        return;
+    }
+
+    method void drawBoardRow(int row) {
+        var int column;
+        var String boardRow;
+        let column = 0;
+        let boardRow = allSquares[row];
+        while(column < 32) {
+            if(boardRow.charAt(column) = isOne) {
+                do Drawer.drawBox(column, row, -1);
+            } else {
+                do Drawer.drawBox(column, row, 0);
+            }
+            let column = column + 1;
+        }
+        return;
+    }
+
+    method void updateBoardSquare(int xPos, int yPos) {
+        var String currentRow;
+        var char one;
+        let one = 49;
+        let currentRow = allSquares[yPos];
+        do currentRow.setCharAt(xPos, one);
+        let allSquares[yPos] = currentRow;
+        return;
+    }
+
+    method Boolean isInContactAbove(String shapeMap, int newX, int newY) {
+        var int row, column;
+        var String boardRow;
+        var char bitChar, boardChar;
+        while(row < 4) {
+            while(column < 4) {
+                let bitChar = shapeMap.charAt(((row * 4) + column));
+                if(bitChar = isOne) {
+                    if((row + newY) < 15) {
+                        let boardRow = allSquares[(newY + row + 1)];
+                        let boardChar = boardRow.charAt(newX + column);
+                        if(boardChar = isOne) {
+                            return true;
+                        }
+                    }
+                }
+                let column = column + 1;
+            }
+            let column = 0;
+            let row = row + 1;
+        }
+        return false;
+    }
+
+    method Boolean spaceIsFree(String shapeMap, int newX, int newY) {
+        var int row, column;
+        var String boardRow;
+        var char bitChar, boardChar;
+        while(row < 4) {
+            while(column < 4) {
+                let bitChar = shapeMap.charAt(((row * 4) + column));
+                if(bitChar = isOne) {
+                    if(~(isInBounds((column + newX), (row + newY)))) {
+                        return false;
+                    }
+                    let boardRow = allSquares[(newY + row)];
+                    let boardChar = boardRow.charAt(newX + column);
+                    if(boardChar = isOne) {
+                        return false;
+                    }
+                }
+                let column = column + 1;
+            }
+            let column = 0;
+            let row = row + 1;
+        }
+        return true;
+    }
+
+    method Boolean isInBounds(int x, int y) {
+        return ((~(x < 0)) & (~(x > 31)) & (~(y < 0)) & (~(y > 14)));
+    }
+
+    method Boolean shapeIsAtFloor(String shapeMap, int newX, int newY) {
+        var int row, column;
+        var char bitChar, boardChar;
+        while(row < 4) {
+            while(column < 4) {
+                let bitChar = shapeMap.charAt(((row * 4) + column));
+                if(bitChar = isOne) {
+                    if((newY + row) = 15) {
+                        return true;
+                    }
+                }
+                let column = column + 1;
+            }
+            let column = 0;
+            let row = row + 1;
+        }
+        return false;
+    }
+
+    method void removeCompleteRows() {
+        var int counter;
+        var String boardRow;
+        let counter = 0;
+        while(counter < 16) {
+            let boardRow = allSquares[counter];
+            if(isCompleteRow(boardRow)) {
+                do removeRow(counter);
+            }
+            let counter = counter + 1;
+        }
+        return;
+    }
+
+    method Bool isCompleteRow(String boardRow) {
+        var int counter;
+        var char bitChar;
+        let counter = 0;
+        while(counter < 32) {
+            let bitChar = boardRow.charAt(counter);
+            if(~(bitChar = isOne)) {
+                return false;
+            }
+            let counter = counter + 1;
+        }
+        return true;
+    }
+
+    method void removeRow(int row) {
+        var int counter;
+        let counter = row;
+        while(counter > 0) {
+            let allSquares[counter] = allSquares[counter - 1];
+            let counter = counter - 1;
+        }
+        let allSquares[0] = "00000000000000000000000000000000";
+        return;
+    }
+
+    method void clearScreen() {
+        var int counter;
+        while(counter < 16) {
+            let allSquares[counter] = "00000000000000000000000000000000";
+            let counter = counter + 1;
+        }
+        return;
+    }
+
+    method void dispose() {
+        var int counter;
+        var String boardRow;
+        let counter = 0;
+        while(counter < 16) {
+            let boardRow = allSquares[counter];
+            do boardRow.dispose();
+            let counter = counter + 1;
+        }
+        do Array.dispose(allSquares);
+        do Memory.deAlloc(this);
+        return;
+    }
+}

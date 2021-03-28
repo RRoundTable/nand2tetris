@@ -1,0 +1,119 @@
+class Player {
+    field Shape shape;
+    field Array position, shapesArray;
+    field int orientation, shapesIndex;
+
+    constructor Player new() {
+        let position = Array.new(2);
+        let shapesIndex = -1;
+        do initializeShapesArray();
+        let shape = Shape.new();
+        do setNewShape();
+        return this;
+    }
+
+    method void initializeShapesArray() {
+        let shapesArray = Array.new(60);
+        let shapesArray[0] = 0;
+        let shapesArray[1] = 1;
+        let shapesArray[2] = 2;
+        let shapesArray[3] = 3;
+        let shapesArray[4] = 4;
+        let shapesArray[5] = 5;
+        let shapesArray[6] = 6;
+        let shapesArray[7] = 4;
+        let shapesArray[8] = 3;
+        let shapesArray[9] = 5;
+        let shapesArray[10] = 2;
+        let shapesArray[11] = 3;
+        let shapesArray[12] = 3;
+        let shapesArray[13] = 5;
+        let shapesArray[14] = 5;
+        let shapesArray[15] = 3;
+        let shapesArray[16] = 1;
+        let shapesArray[17] = 1;
+        let shapesArray[18] = 2;
+        let shapesArray[19] = 6;
+        let shapesArray[20] = 3;
+        let shapesArray[21] = 5;
+        let shapesArray[22] = 5;
+        let shapesArray[23] = 2;
+        let shapesArray[24] = 1;
+        let shapesArray[25] = 0;
+        let shapesArray[26] = 4;
+        let shapesArray[27] = 2;
+        let shapesArray[28] = 1;
+        let shapesArray[29] = 5;
+        let shapesArray[30] = 0;
+        let shapesArray[31] = 1;
+        let shapesArray[32] = 2;
+        let shapesArray[33] = 3;
+        let shapesArray[34] = 4;
+        let shapesArray[35] = 5;
+        let shapesArray[36] = 6;
+        let shapesArray[37] = 4;
+        let shapesArray[38] = 3;
+        let shapesArray[39] = 5;
+        let shapesArray[40] = 2;
+        let shapesArray[41] = 3;
+        let shapesArray[42] = 3;
+        let shapesArray[43] = 5;
+        let shapesArray[44] = 5;
+        let shapesArray[45] = 3;
+        let shapesArray[46] = 1;
+        let shapesArray[47] = 1;
+        let shapesArray[48] = 2;
+        let shapesArray[49] = 6;
+        let shapesArray[50] = 3;
+        let shapesArray[51] = 5;
+        let shapesArray[52] = 5;
+        let shapesArray[53] = 2;
+        let shapesArray[54] = 1;
+        let shapesArray[55] = 0;
+        let shapesArray[56] = 4;
+        let shapesArray[57] = 2;
+        let shapesArray[58] = 1;
+        let shapesArray[59] = 5;
+        return;
+    }
+
+    method void setPosition(int xPos, int yPos) {
+        let position[0] = xPos;
+        let position[1] = yPos;
+        return;
+    }
+
+    method Array getPosition() {
+        return position;
+    }
+
+    method void setOrientation(int rPos) {
+        let orientation = rPos;
+        return;
+    }
+
+    method int getOrientation() {
+        return orientation;
+    }
+
+    method String getShapeMap(int orientation) {
+        return shape.getShapeMap(orientation);
+    }
+
+    method void setNewShape() {
+        let position[0] = 0;
+        let position[1] = 0;
+        let orientation = 0;
+        let shapesIndex = shapesIndex + 1;
+        do shape.setShape(shapesArray[shapesIndex]);
+        return;
+    }
+
+    method void dispose() {
+        do shape.dispose();
+        do Array.dispose(position);
+        do Array.dispose(shapesArray);
+        do Memory.deAlloc(this);
+        return;
+    }
+}

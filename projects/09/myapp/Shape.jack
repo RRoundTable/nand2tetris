@@ -1,0 +1,99 @@
+class Shape {
+    field Array shapeMapArray;
+
+    constructor Shape new() {
+        let shapeMapArray = Array.new(4);
+        return this;
+    }
+
+    method void setShape(int shape) {
+        if(shape = 0) {
+            do getSquare();
+        }
+        if(shape = 1) {
+            do getLong();
+        }
+        if(shape = 2) {
+            do getLeftSnake();
+        }
+        if(shape = 3) {
+            do getLeftHook();
+        }
+        if(shape = 4) {
+            do getRightSnake();
+        }
+        if(shape = 5) {
+            do getRightHook();
+        }
+        if(shape = 6) {
+            do getPyramid();
+        }
+        return;
+    }
+
+    method Array getShapeMap(int orientation) {
+        return shapeMapArray[orientation];
+    }
+
+    method void getSquare() {
+        let shapeMapArray[0] = "0000011001100000";
+        let shapeMapArray[1] = "0000011001100000";
+        let shapeMapArray[2] = "0000011001100000";
+        let shapeMapArray[3] = "0000011001100000";
+        return;
+    }
+
+    method void getLong() {
+        let shapeMapArray[0] = "0100010001000100";
+        let shapeMapArray[1] = "0000111100000000";
+        let shapeMapArray[2] = "0100010001000100";
+        let shapeMapArray[3] = "0000111100000000";
+        return;
+    }
+
+    method void getLeftSnake() {
+        let shapeMapArray[0] = "0000110001100000";
+        let shapeMapArray[1] = "0010011001000000";
+        let shapeMapArray[2] = "0000110001100000";
+        let shapeMapArray[3] = "0010011001000000";
+        return;
+    }
+
+    method void getLeftHook() {
+        let shapeMapArray[0] = "0000100011100000";
+        let shapeMapArray[1] = "1100100010000000";
+        let shapeMapArray[2] = "1110001000000000";
+        let shapeMapArray[3] = "0010001001100000";
+        return;
+    }
+
+    method void getRightSnake() {
+        let shapeMapArray[0] = "0000011011000000";
+        let shapeMapArray[1] = "0100011000100000";
+        let shapeMapArray[2] = "0000011011000000";
+        let shapeMapArray[3] = "0100011000100000";
+        return;
+    }
+
+    method void getRightHook() {
+        let shapeMapArray[0] = "0000001011100000";
+        let shapeMapArray[1] = "1000100011000000";
+        let shapeMapArray[2] = "1110100000000000";
+        let shapeMapArray[3] = "0110001000100000";
+        return;
+    }
+
+    method void getPyramid() {
+        let shapeMapArray[0] = "0100111000000000";
+        let shapeMapArray[1] = "0100011001000000";
+        let shapeMapArray[2] = "0000111001000000";
+        let shapeMapArray[3] = "0100110001000000";
+        return;
+    }
+
+    method void dispose() {
+        do Array.dispose(shapeMapArray);
+        do Memory.deAlloc(this);
+        return;
+    }
+}

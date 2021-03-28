@@ -14,6 +14,8 @@ set local 300,
 set argument 400,
 set argument[0] 6,
 set argument[1] 3000,
+set this 400,
+set that 500,
 
 repeat 73 {
   vmstep;

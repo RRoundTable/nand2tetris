@@ -1,0 +1,1 @@
+python main.py /Users/makinarocks/nand2tetris/projects/08/FunctionCalls/StaticsTest /Users/makinarocks/nand2tetris/projects/08/FunctionCalls/StaticsTest/StaticsTest.asm

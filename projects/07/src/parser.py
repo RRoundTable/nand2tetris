@@ -29,7 +29,7 @@ class Parser:
             "pop": C_POP,
             "label": C_LABEL,
             "goto": C_GOTO,
-            "if": C_IF,
+            "if-goto": C_IF,
             "function": C_FUNCTION,
             "call": C_CALL,
             "return": C_RETURN
@@ -67,5 +67,5 @@ class Parser:
         return second_arg
 
     def arithmetic(self) -> str:
-        arithmetic = self.curr.replace("\n", "")
+        arithmetic = self.curr.split(" ")[0].replace("\n", "")
         return arithmetic
